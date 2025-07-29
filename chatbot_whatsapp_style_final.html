@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Asisten JasaPembuatAplikasi.com</title>
+  <style>
+    #chatPopup {{
+      position: fixed; bottom: 80px; right: 20px;
+      width: 320px; max-height: 500px;
+      border-radius: 10px; background: #f0f0f0;
+      display: none; flex-direction: column;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      font-family: 'Segoe UI', sans-serif; z-index: 9999;
+    }}
+    #chatHeader {{
+      background-color: #075e54;
+      color: white; padding: 12px;
+      font-weight: bold;
+      text-align: center; border-top-left-radius:10px; border-top-right-radius:10px;
+    }}
+    #chatBox {{
+      flex: 1; overflow-y: auto; padding: 10px;
+      background: #e5ddd5;
+    }}
+    .message {{
+      max-width: 80%;
+      padding: 10px; margin: 6px 0;
+      border-radius: 8px; line-height: 1.4;
+      word-wrap: break-word; font-size: 14px;
+    }}
+    .user {{
+      background-color: #dcf8c6; align-self: flex-end; margin-left: auto;
+    }}
+    .ai {{
+      background-color: white; align-self: flex-start; margin-right: auto;
+    }}
+    #chatInput {{
+      display: flex; border-top: 1px solid #ccc;
+    }}
+    #userInput {{
+      flex: 1; padding: 10px;
+      border: none; outline: none;
+    }}
+    #sendBtn {{
+      background: #25d366; color: white;
+      border: none; padding: 10px 14px;
+      cursor: pointer; font-weight: bold;
+    }}
+    #openChat {{
+      position: fixed; bottom: 20px; right: 20px;
+      background-color: #25d366; color: white;
+      border: none; border-radius: 50px;
+      padding: 12px 20px; font-size: 16px;
+      cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      z-index: 9998;
+    }}
+  </style>
+</head>
+<body>
+
+<button id="openChat" onclick="toggleChat()">💬 Konsultasi Gratis</button>
+
+<div id="chatPopup">
+  <div id="chatHeader">🤖 Asisten JasaPembuatAplikasi.com</div>
+  <div id="chatBox"></div>
+  <div id="chatInput">
+    <input type="text" id="userInput" placeholder="Ketik pertanyaan di sini...">
+    <button id="sendBtn" onclick="sendToAI()">Kirim</button>
+  </div>
+</div>
+
+<script>
+  const API_KEY = "YOUR_OPENAI_API_KEY"; // ← Ganti dengan API kamu
+
+  const chatBox = document.getElementById("chatBox");
+  const input = document.getElementById("userInput");
+
+  function toggleChat() {{
+    const popup = document.getElementById("chatPopup");
+    const isVisible = popup.style.display === "flex";
+    popup.style.display = isVisible ? "none" : "flex";
+    if (!isVisible) {{
+      setTimeout(() => {{
+        addMessage("ai", "Halo! 👋 Saya Asisten JasaPembuatAplikasi.com. Ada yang bisa saya bantu hari ini?");
+      }}, 500);
+    }}
+  }}
+
+  function addMessage(sender, text) {{
+    const msg = document.createElement("div");
+    msg.className = `message ${sender}`;
+    msg.innerText = text;
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }}
+
+  async function sendToAI() {{
+    const prompt = input.value;
+    if (!prompt) return;
+    addMessage("user", prompt);
+    input.value = "";
+
+    try {{
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {{
+        method: "POST",
+        headers: {{
+          "Authorization": "Bearer " + API_KEY,
+          "Content-Type": "application/json"
+        }},
+        body: JSON.stringify({{
+          model: "gpt-3.5-turbo",
+          messages: [
+            {{ role: "system", content: "Kamu adalah chatbot profesional yang menjawab dengan Bahasa Indonesia. Fokus pada jasa pembuatan aplikasi dan website." }},
+            {{ role: "user", content: prompt }}
+          ]
+        }})
+      }});
+      const data = await res.json();
+      const reply = data.choices[0].message.content;
+      addMessage("ai", reply);
+    }} catch (e) {{
+      addMessage("ai", "⚠️ Maaf, terjadi kesalahan saat menghubungi server.");
+    }}
+  }}
+</script>
+
+</body>
+</html>
