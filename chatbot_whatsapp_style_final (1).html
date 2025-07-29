@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Asisten JasaPembuatAplikasi.com</title>
+  <style>
+    .chatbot-bubble {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 320px;
+      max-height: 400px;
+      background-color: #f1f1f1;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+      z-index: 9999;
+      overflow: hidden;
+    }
+    .chat-header {
+      background-color: #25D366;
+      color: white;
+      padding: 10px 15px;
+      font-weight: bold;
+    }
+    .chat-body {
+      padding: 10px;
+      flex: 1;
+      overflow-y: auto;
+      background: white;
+    }
+    .chat-input {
+      border-top: 1px solid #ccc;
+      padding: 8px;
+      display: flex;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 20px;
+      background: #eee;
+    }
+    .chat-input button {
+      background: #25D366;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      margin-left: 8px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="chatbot-bubble">
+    <div class="chat-header">Asisten JasaPembuatAplikasi.com</div>
+    <div class="chat-body" id="chat-body">
+      <div><strong>Bot:</strong> Hai! 👋 Saya Asisten JasaPembuatAplikasi.com. Ada yang bisa saya bantu hari ini?</div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="user-input" placeholder="Ketik di sini..." />
+      <button onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+
+  <script>
+    function sendMessage() {
+      const input = document.getElementById('user-input');
+      const message = input.value.trim();
+      if (message === '') return;
+
+      const chatBody = document.getElementById('chat-body');
+      const userDiv = document.createElement('div');
+      userDiv.innerHTML = '<strong>Anda:</strong> ' + message;
+      chatBody.appendChild(userDiv);
+
+      const botDiv = document.createElement('div');
+      botDiv.innerHTML = '<strong>Bot:</strong> Terima kasih! Kami akan segera menghubungi Anda atau silakan klik tombol WhatsApp di bawah untuk respon cepat.';
+      chatBody.appendChild(botDiv);
+
+      input.value = '';
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+  </script>
+</body>
+</html>
